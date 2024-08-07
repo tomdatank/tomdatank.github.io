@@ -73,12 +73,13 @@ function startGame() {
             cell.dataset.cell = ''; // Mark the cell as a game cell
             cell.dataset.index = i; // Mark the cell with its index
             board.appendChild(cell);
-            cell.addEventListener('click', handleClick, { once: true }); // Add click event listener to each cell
+            cell.addEventListener('click', handleClick); // Add click event listener to each cell
         }
     });
     setStatusMessage("Player X's turn");
     highlightNextBoard(); // Highlight the initial board
 }
+
 
 function handleClick(e) {
     if (gameEnded) return; // Prevent any moves if the game has ended
@@ -87,11 +88,13 @@ function handleClick(e) {
     const currentClass = oTurn ? O_CLASS : X_CLASS;
     const cellIndex = parseInt(cell.dataset.index);
 
+    // Only allow moves in the highlighted board unless it's already won
     if (nextBoardIndex !== null && board !== boardElements[nextBoardIndex] && !boardElements[nextBoardIndex].classList.contains('won')) {
-        return; // Only allow moves in the highlighted board unless it's already won
-    }
-
-    if (cell.textContent === '' && !board.classList.contains('won')) { // Ensure the cell is empty and the board is not already won
+        // Prevent marking the cell as played if it's not in the correct board
+        e.stopImmediatePropagation(); // Prevent the click event from propagating
+        return;
+    } 
+    if (cell.textContent != 'X' && cell.textContent != 'O' && !board.classList.contains('won')) { // Ensure the cell is empty and the board is not already won
         placeMark(cell, currentClass); // Place the current player's mark
         if (checkWin(currentClass, board)) {
             endGame(false, board, currentClass); // If current player wins, end the game for the board
