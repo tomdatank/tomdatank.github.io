@@ -57,7 +57,7 @@ window.addEventListener('click', (event) => {
 
 startGame();
 
-// Adjust the startGame function to properly reset the game state
+//the startGame function to properly reset the game state
 function startGame() {
     oTurn = false; // X always starts first
     gameEnded = false; // Reset game ended status
